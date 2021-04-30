@@ -59,7 +59,7 @@ int main(int argc, char **argv){
             printf("- EAX = %15.llx,\t EAX = %lld\n", regs.rax, regs.rax);
             printf("- EBX = %15.llx,\t EBX = %lld\n", regs.rbx, regs.rbx);
             if(regs.rcx == 0){
-                printf("- ECX = 15.%llx,\t ECX = %lld\n", regs.rcx, regs.rcx);
+                printf("- ECX = %15.llx,\t ECX = %lld\n", regs.rcx, regs.rcx);
             } else{
                 printf("- ECX = %15.llx,\t ECX = %lld\n", regs.rcx, regs.rcx);
             }
