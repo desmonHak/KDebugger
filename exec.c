@@ -40,32 +40,31 @@ int main(int argc, char **argv){
         execl(programname, programname, NULL);
     }
 
-
     else if (child_pid > 0) {
 
         int status;
         wait(&status);
-        
+
         while (WIFSTOPPED(status)){
 
             struct user_regs_struct regs;
             ptrace(PTRACE_GETREGS, child_pid, 0, &regs);
-            
+
             unsigned instr = ptrace(PTRACE_PEEKTEXT, child_pid, regs.rip, 0);
 
             int little_endian;
             change_endianness((char *)&instr, (char *)&little_endian);
 
-            printf("----- RIP = [ 0x%08x == %d ], instr = [ %x ] -----\n", regs.rip, regs.rip, little_endian);
-            printf("- EAX = 0x%x,\t\t EAX = %d\n", regs.rax, regs.rax);
-            printf("- EBX = 0x%x,\t\t EBX = %d\n", regs.rbx, regs.rbx);
+            printf("----- RIP = [ 0x%08x == %d ], instr = [ 0x%x ] -----\n", regs.rip, regs.rip, little_endian);
+            printf("- EAX = %15.llx,\t EAX = %lld\n", regs.rax, regs.rax);
+            printf("- EBX = %15.llx,\t EBX = %lld\n", regs.rbx, regs.rbx);
             if(regs.rcx == 0){
-                printf("- ECX = 0x%x,\t\t ECX = %d\n", regs.rcx, regs.rcx);
+                printf("- ECX = 15.%llx,\t ECX = %lld\n", regs.rcx, regs.rcx);
             } else{
-                printf("- ECX = 0x%x,\t ECX = %d\n", regs.rcx, regs.rcx);
+                printf("- ECX = %15.llx,\t ECX = %lld\n", regs.rcx, regs.rcx);
             }
-            printf("- EDX = 0x%x,\t\t EDX = %d\n", regs.rdx, regs.rdx);
-            printf("- RDI = 0x%x,\t\t RDI = %d\n", regs.rdi, regs.rdi);
+            printf("- EDX = %15.llx,\t EDX = %lld\n", regs.rdx, regs.rdx);
+            printf("- RDI = %15.llx,\t RDI = %lld\n", regs.rdi, regs.rdi);
             printf("-------------------------------------------------------------------\n");
 
             ptrace(PTRACE_SINGLESTEP, child_pid, 0, 0);
@@ -82,6 +81,7 @@ int main(int argc, char **argv){
                     printf("RIP = %d,  breakpoint = %d \n\n", regs.rip, atoi(argv[2]));
 
                 }
+
 
             } else{
                 argv[2] = "000";
